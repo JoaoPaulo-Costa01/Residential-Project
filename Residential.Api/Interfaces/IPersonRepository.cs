@@ -1,0 +1,11 @@
+﻿using Residential.Api.Models;
+
+namespace Residential.Api.Interfaces {
+    public interface IPersonRepository {
+        Task<Person> AddAsync(Person person);
+        Task<IEnumerable<Person>> GetAllAsync();
+        Task<Person?> GetByIdAsync(int id);
+        Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<Person>> GetAllWithTransactionsAsync();
+    }
+}

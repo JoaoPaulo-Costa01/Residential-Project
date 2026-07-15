@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: residential_db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Residential123!"
+    ports:
+      - "2000:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  backend:
+    image: residential_api
+    container_name: residential_backend
+    build:
+      context: ./Residential.Api
+      dockerfile: Dockerfile
+    ports:
+      - "7254:8080"
+    environment:
+      - ConnectionStrings__ConnectionString=Server=database;Database=ResidentialDb;User Id=sa;Password=Residential123!;TrustServerCertificate=True;
+    depends_on:
+      - database
+
+  frontend:
+    image: residential_web
+    container_name: residential_frontend
+    build:
+      context: ./residential-web
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  sql_data:
